@@ -1,28 +1,12 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.Security.Cryptography;
 
-public class DatabaseHelper
+public class UserDatabaseHelper
 {
     private string connectionString = "Server=localhost;Database=database;Uid=root;Pwd=root;";
-
-    public void TestConnection()
-    {
-        using (MySqlConnection conn = new MySqlConnection(connectionString))
-        {
-            try
-            {
-                conn.Open();
-                Console.WriteLine("Connection successful!");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Connection failed: " + ex.Message);
-            }
-        }
-    }
-
-    public List<Game> GetGames(string query)
+    public List<User> GetGames(string query)
     {
         DataTable dt = new DataTable();
         using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -37,8 +21,7 @@ public class DatabaseHelper
             }
 
             MySqlCommand cmd = new MySqlCommand(query, conn);
-            MySqlDataReader mySqlDataReader = new(cmd);
-            using (MySqlDataReader reader = mySqlDataReader)
+            using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
                 {
