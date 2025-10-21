@@ -4,11 +4,11 @@
     ViewData["Title"] = "Home page";
 }
 
-<h2>Enter Game Information</h2>
+<h2>Add your game!!</h2>
 <form method="post" enctype="multipart/form-data">
     <div>
-        <label for="Name">Name:</label>
-        <input type="text" id="Name" name="Name" />
+        <label>Name:</label>
+        <input asp-for="game.Name" />
     </div>
     <div>
         <label for="Description">Description:</label>

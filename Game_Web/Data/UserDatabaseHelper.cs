@@ -1,16 +1,18 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Game_Web.Data.Entities;
+using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.Reflection.Metadata;
 using System.Security.Cryptography;
 
 public class UserDatabaseHelper
 {
-    private string connectionString = "Server=localhost;Database=database;Uid=root;Pwd=root;";
-    public List<User> GetGames(string query)
+    private string connectionString = "Server=localhost;Database=web_aplication;Uid=root;Pwd=francisco;";
+    public List<User> GetUsers()
     {
-        DataTable dt = new DataTable();
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
+            var users = new List<User>();
             try
             {
                 conn.Open();
@@ -20,15 +22,24 @@ public class UserDatabaseHelper
                 throw new Exception("Database was not connected.", exception);
             }
 
-            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlCommand cmd = new MySqlCommand();
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
                 {
+                    var user = new User
+                    {
+                        Id = reader.GetInt32("id"),
+                        Name = reader.GetString("name"),
+                        Email = reader.GetString("email"),
+                        Password = reader.GetString("password"),
+                        Picture = reader.GetString("picture"),
+                    };
+                    users.Add(user);
 
                 }
             }
+            return users;
         }
-        return dt;
     }
 }
