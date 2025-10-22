@@ -7,11 +7,11 @@ using Game_Web.Data.Entities;
 public class RatingDatabaseHelper
 {
     private string connectionString = "Server=localhost;Database=database;Uid=root;Pwd=root;";
-    public List<Rating> GetGames()
+    public List<ratingModel> GetGames()
     {
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
-            var ratings = new List<Rating>();
+            var ratings = new List<ratingModel>();
 
             try
             {
@@ -27,7 +27,7 @@ public class RatingDatabaseHelper
             {
                 while (reader.Read())
                 {
-                    var rating = new Rating
+                    var rating = new ratingModel
                     {
                         Id = reader.GetInt32("id"),
                         UserId = reader.GetInt32("user_id"),

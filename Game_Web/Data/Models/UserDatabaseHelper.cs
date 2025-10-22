@@ -8,11 +8,11 @@ using System.Security.Cryptography;
 public class UserDatabaseHelper
 {
     private string connectionString = "Server=localhost;Database=web_aplication;Uid=root;Pwd=francisco;";
-    public List<User> GetUsers()
+    public List<UserModel> GetUsers()
     {
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
-            var users = new List<User>();
+            var users = new List<UserModel>();
             try
             {
                 conn.Open();
@@ -27,7 +27,7 @@ public class UserDatabaseHelper
             {
                 while (reader.Read())
                 {
-                    var user = new User
+                    var user = new UserModel
                     {
                         Id = reader.GetInt32("id"),
                         Name = reader.GetString("name"),

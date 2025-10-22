@@ -1,70 +1,55 @@
 using Game_Web.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using MySql.Data.MySqlClient;
+using System.IO;
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
-namespace Game_Web.Pages
+namespace Game_Web.Pages;
+
+public class IndexModel : PageModel
 {
-    public class IndexModel : PageModel
+    [BindProperty]
+    public Game_Web.Data.Entities.GameModel Game { get; set; } = new();
+
+    [BindProperty]
+    public IFormFile? Picture { get; set; }
+
+    public void OnGet()
     {
-        private readonly ILogger<IndexModel> _logger;
+    }
 
-        public IndexModel(ILogger<IndexModel> logger)
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid)
         {
-            _logger = logger;
+            return Page();
         }
 
-        public void OnGet()
+        // Save uploaded file (if any) to wwwroot/uploads and store relative path in Game.Picture
+        if (Picture != null && Picture.Length > 0)
         {
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            Directory.CreateDirectory(uploadsFolder);
 
+            var fileName = Guid.NewGuid().ToString("N") + Path.GetExtension(Picture.FileName);
+            var filePath = Path.Combine(uploadsFolder, fileName);
 
-        }
-        private string connectionString = "Server=localhost;Database=database;Uid=root;Pwd=root;";
-        public List<Game> GetGames(string query, List<Game> Gamedt)
-        {
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            await using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                var games = new List<Game>();
-                try
-                {
-                    conn.Open();
-                }
-                catch (MySqlException exception)
-                {
-                    throw new Exception("Database was not connected.", exception);
-                }
-
-                MySqlCommand cmd = new MySqlCommand(query, conn);
-                using (MySqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var game = new Game
-                        {
-                            Id = reader.GetInt32("id"),
-                            Name = reader.GetString("name"),
-                            Genre = reader.GetString("genre"),
-                            Description = reader.GetString("description"),
-                            Picture = reader.GetString("picture"),
-                        };
-                        games.Add(game);
-                    }
-                }
-                return games;
+                await Picture.CopyToAsync(stream);
             }
-        }
-        public void AddGame(Game game)
-        {
-            using var conn = new MySqlConnection(connectionString);
-            conn.Open();
 
-            var cmd = new MySqlCommand("INSERT INTO Games (Title, Genre, ReleaseDate) VALUES (@title, @genre, @releaseDate)", conn);
-            cmd.Parameters.AddWithValue("@title", game.Name);
-            cmd.Parameters.AddWithValue("@genre", game.Genre);
-            cmd.Parameters.AddWithValue("@description", game.Description);
-            cmd.Parameters.AddWithValue("@picture", game.Picture);
-
-            cmd.ExecuteNonQuery();
+            // Use a web-friendly relative path to store in DB
+            Game.Picture = "/uploads/" + fileName;
         }
+
+        // Persist to DB using the existing ADO.NET class
+        var repo = new Game_Web.Data.Models.GameModel();
+        repo.AddGame(Game);
+
+        TempData["Success"] = "Game saved.";
+        return RedirectToPage();
     }
 }
