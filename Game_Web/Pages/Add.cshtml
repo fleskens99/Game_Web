@@ -14,11 +14,10 @@
     </div>
   </div>
 
-  <!-- Note: we use two submit buttons that target different handlers:
-       - Save Game -> OnPost
-       - Show Preview -> OnPostPreview -->
   <form class="add-game-form" method="post" enctype="multipart/form-data">
     <div>
+      <div asp-validation-summary="ModelOnly" class="hint"></div>
+
       <div class="form-group">
         <label asp-for="Game.Name">Name</label>
         <input asp-for="Game.Name" id="nameInput" />
@@ -27,7 +26,6 @@
 
       <div class="form-group">
         <label asp-for="Game.Description">Description</label>
-        <!-- Starts smaller; server-side preview requires submitting -->
         <textarea asp-for="Game.Description" rows="2" class="auto-resize" id="descriptionInput"></textarea>
         <span asp-validation-for="Game.Description" class="hint"></span>
       </div>
@@ -39,42 +37,43 @@
       </div>
 
       <div class="form-group">
-        <label>Picture</label>
+        <label for="Picture">Picture</label>
         <div class="file-input">
           <label class="btn btn-ghost" style="cursor:pointer;">
             Choose file
-            <input asp-for="Picture" type="file" accept="image/*" />
+            <input asp-for="Picture" id="fileInput" type="file" accept="image/*" />
           </label>
-          <div class="hint" id="fileName">@Model.SelectedFileName ?? "No file selected"</div>
+          <div class="hint">@Model.SelectedFileName ?? "No file selected"</div>
         </div>
         <span asp-validation-for="Picture" class="hint"></span>
       </div>
 
-      <div style="margin-top:1rem; display:flex; gap:.6rem;">
-        <!-- final save posts to default OnPost handler -->
+      <div class="controls" style="margin-top:1rem;">
         <button type="submit" class="btn btn-primary">Save Game</button>
-
         <a asp-page="/Index" class="btn btn-ghost" role="button">Cancel</a>
-
-        <!-- preview posts to OnPostPreview handler -->
-        <button asp-page-handler="Preview" type="submit" class="btn btn-primary">Show Preview</button>
       </div>
     </div>
 
     <div class="side-card">
+      <div style="display:flex; align-items:center; justify-content:flex-end; gap:.6rem; margin-bottom:.5rem;">
+        <button asp-page-handler="Preview" type="submit" id="showPreviewBtn" class="btn btn-primary">Show Preview</button>
+      </div>
+
       @if (Model.ShowPreview)
       {
-          <div class="preview">
-            <img id="previewImg" src="@(Model.PreviewImagePath ?? Url.Content("~/images/placeholder.png"))" alt="preview" />
-            <div>
-              <div class="badge">Preview</div>
-              <div class="hr"></div>
-              <div class="row">
-                <div class="title" style="font-size:1rem">@Model.Game?.Name</div>
-                <div class="hint">@Model.Game?.Categorie</div>
-              </div>
-              <div style="margin-top:.5rem;">
-                <div class="hint">@Model.Game?.Description</div>
+          <div id="previewContainer" class="preview-container" aria-hidden="false">
+            <div class="preview">
+              <img id="previewImg" src="@(Model.PreviewImagePath ?? Url.Content("~/images/placeholder.png"))" alt="preview" />
+              <div>
+                <div class="badge">Preview</div>
+                <div class="hr"></div>
+                <div class="row">
+                  <div class="title" style="font-size:1rem">@Model.Game?.Name</div>
+                  <div class="hint">@Model.Game?.Categorie</div>
+                </div>
+                <div style="margin-top:.5rem;">
+                  <div class="hint">@Model.Game?.Description</div>
+                </div>
               </div>
             </div>
           </div>
@@ -82,7 +81,7 @@
       else
       {
           <div style="margin-top:.75rem;">
-            <div class="hint">Press "Show Preview" to upload the image temporarily and see the preview.</div>
+            <div class="hint">Press "Show Preview" to render a server-side preview.</div>
           </div>
       }
     </div>
@@ -90,5 +89,5 @@
 </div>
 
 @section Scripts {
-  <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }

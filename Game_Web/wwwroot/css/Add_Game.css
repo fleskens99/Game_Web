@@ -1,6 +1,6 @@
 ﻿:root {
-  --bg-1: #050006;     
-  --bg-2: #2b004d;     
+  --bg-1: #050006;
+  --bg-2: #2b004d;
   --text: #efe9ff;
   --muted: rgba(239,233,255,0.7);
   --accent-1: #7c3aed;
@@ -9,16 +9,15 @@
   --radius-sm: 10px;
   --shadow: 0 10px 30px rgba(16,6,30,0.6);
   --touch-size: 44px;
+  --page-padding: 1.5rem;
+  --gap-md: 0.9rem;
 }
 
-body {
-  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
-  color: #efe9ff;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  line-height: 1.35;
-  padding: 1.25rem;
+/* base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html, body {
@@ -29,29 +28,37 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
   color: var(--text);
-  font-size: 18px; 
+  font-size: 18px;
+  -webkit-text-size-adjust: 100%;
 }
 
+/* page shell */
 body {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem; 
-  padding: 1.5rem;
+  gap: 1rem;
+  padding: var(--page-padding);
+  min-height: 100vh;
 }
 
+/* Make Add page content align left and split screen into two columns on wide screens.
+   These selectors only affect pages that use .add-game-page (the Add page). */
 .add-game-page {
-  max-width: 980px;
-  margin: 1.25rem auto;
-  padding: 1.25rem;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 1.25rem calc(var(--page-padding) + 8px) 1.25rem var(--page-padding);
   border-radius: var(--radius-lg);
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
   box-shadow: var(--shadow);
   backdrop-filter: blur(6px) saturate(1.05);
-  overflow: hidden;
+  overflow: visible;
+  font-size: clamp(15px, 0.9vw + 14px, 20px); /* responsive typography inside add page only */
 }
 
+/* header inside card */
 .add-game-page .header {
   display: flex;
   gap: 1rem;
@@ -59,72 +66,100 @@ body {
   margin-bottom: 1rem;
 }
 .add-game-page .title {
-  font-size: 1.4rem;
+  font-size: clamp(1.1rem, 1.2vw + 0.6rem, 1.8rem);
   font-weight: 700;
   color: #fff;
   letter-spacing: 0.2px;
 }
 .add-game-page .subtitle {
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: clamp(0.9rem, 0.9vw + 0.2rem, 1.1rem);
 }
 
+/* form grid: left column (form) and right column (preview) */
 .add-game-form {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.9rem;
+  gap: var(--gap-md);
+  align-items: start;
 }
 
+/* on wide screens make a clear two-column split; left takes the remaining space, right is fixed */
 @media (min-width: 820px) {
   .add-game-form {
-    grid-template-columns: 1fr 360px;
-    align-items: start;
+    grid-template-columns: 1fr 420px;
+  }
+
+  /* ensure the whole layout starts at left edge of the viewport */
+  body {
+    align-items: flex-start;
+    justify-content: flex-start;
   }
 }
 
+/* keep side-card full height of its content and positioned to the right */
 .add-game-form .side-card {
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
   padding: 1rem;
   border-radius: var(--radius-sm);
   border: 1px solid rgba(255,255,255,0.03);
+  width: 100%;
 }
 
+/* form groups */
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
 }
 
+/* labels */
 .form-group label {
-  font-size: 0.88rem;
+  font-size: clamp(0.9rem, 0.6vw + 0.8rem, 1.05rem);
   color: var(--muted);
   font-weight: 600;
-  text-transform: none;
   letter-spacing: 0.3px;
 }
 
+/* inputs full width and touch friendly */
 input[type="text"],
 input[type="url"],
 input[type="number"],
 select,
 textarea,
 input[type="date"] {
+  width: 100%;
   background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
   color: #fff;
   border: 1px solid rgba(255,255,255,0.05);
   padding: 0.7rem 0.9rem;
   border-radius: 12px;
   min-height: var(--touch-size);
-  font-size: 0.98rem;
+  font-size: clamp(0.95rem, 0.5vw + 0.9rem, 1.05rem);
   outline: none;
   transition: box-shadow .18s ease, transform .12s ease, border-color .12s ease;
+  word-break: break-word;
 }
 
-textarea {
-  min-height: 140px;
-  resize: vertical;
+/* auto-resize textarea behaviour */
+textarea.auto-resize {
+  overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  resize: none;
+  min-height: 1.6rem;
+  line-height: 1.4;
+  padding: 0.5rem 0.9rem;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: height 0.08s ease;
+  box-sizing: border-box;
 }
+textarea.auto-resize::-webkit-scrollbar { width: 0; height: 0; }
 
+/* focus */
 input:focus,
 select:focus,
 textarea:focus {
@@ -133,9 +168,15 @@ textarea:focus {
   transform: translateY(-1px);
 }
 
+/* file input */
 .file-input {
   display: flex;
   gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.file-input label {
+  display: inline-flex;
   align-items: center;
 }
 .file-input button {
@@ -153,7 +194,17 @@ textarea:focus {
   font-size: 0.95rem;
 }
 
+/* controls layout */
+.controls {
+  display: flex;
+  gap: .6rem;
+  flex-wrap: wrap;
+}
+.controls .btn {
+  font-size: clamp(0.95rem, 0.6vw + 0.8rem, 1.05rem);
+}
 
+/* buttons */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -180,13 +231,11 @@ textarea:focus {
   border: 1px solid rgba(255,255,255,0.04);
 }
 
-
+/* helper text and metadata */
 .hint {
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: clamp(0.85rem, 0.4vw + 0.7rem, 0.95rem);
 }
-
-
 .row {
   display:flex;
   gap: .6rem;
@@ -194,6 +243,7 @@ textarea:focus {
   align-items:center;
 }
 
+/* preview area */
 .preview {
   border-radius: 12px;
   overflow: hidden;
@@ -202,7 +252,7 @@ textarea:focus {
   padding: .75rem;
   display:flex;
   gap:.75rem;
-  align-items:center;
+  align-items:flex-start;
 }
 .preview img {
   width: 84px;
@@ -212,20 +262,13 @@ textarea:focus {
   flex-shrink:0;
 }
 
-.badge {
-  background: rgba(255,255,255,0.03);
-  color: var(--muted);
-  padding: .25rem .5rem;
-  font-size: .78rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.02);
-}
-
+/* accessibility focus */
 :focus {
   outline: 3px solid rgba(163,113,255,0.12);
   outline-offset: 3px;
 }
 
+/* subtle separator */
 .hr {
   height: 1px;
   background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.03));
@@ -233,15 +276,88 @@ textarea:focus {
   border-radius: 1px;
 }
 
+/* mobile adjustments */
 @media (max-width: 520px) {
-  html { font-size: 17px; }
-  form[enctype="multipart/form-data"] {
-    padding: 1rem;
-    width: 98%;
+  body {
+    align-items: stretch;
+    justify-content: flex-start;
+    padding-top: 1rem;
+    padding-bottom: 3rem;
   }
-  form[enctype="multipart/form-data"] input[type="text"],
-  form[enctype="multipart/form-data"] textarea {
-    font-size: 1.05rem;
+
+  .add-game-page {
+    padding: 0.9rem;
+    border-radius: 12px;
+    margin: 0.5rem;
+  }
+
+  .add-game-form {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .add-game-form .side-card {
+    order: 3;
+    margin-top: 0.5rem;
+  }
+
+  .preview {
+    flex-direction: row;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+
+  .preview img {
+    width: 72px;
+    height: 72px;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .controls .btn {
+    width: 100%;
+  }
+
+  input[type="text"],
+  textarea,
+  select {
+    font-size: 1.02rem;
     padding: 0.9rem;
   }
+
+  .add-game-page .header { gap: 0.5rem; }                   
+  .add-game-page .title { font-size: 1.15rem; }
+  .add-game-page .subtitle { font-size: 0.9rem; }
+}
+
+/* header forcing (keeps top bar across entire viewport) */
+.site-header {
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 2000 !important;
+    background: linear-gradient(90deg, rgba(10,8,20,0.9), rgba(20,6,60,0.85)) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.35) !important;
+}
+.header-inner {
+    max-width: 100% !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0.5rem 1rem !important;
+    min-height: 64px !important;
+    gap: 1rem !important;
+}
+
+/* utility: break long words in preview descriptions */
+.preview .hint,
+.preview .title {
+  word-break: break-word;
 }
