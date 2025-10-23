@@ -1,4 +1,17 @@
-﻿body {
+﻿:root {
+  --bg-1: #050006;     
+  --bg-2: #2b004d;     
+  --text: #efe9ff;
+  --muted: rgba(239,233,255,0.7);
+  --accent-1: #7c3aed;
+  --accent-2: #a371ff;
+  --radius-lg: 14px;
+  --radius-sm: 10px;
+  --shadow: 0 10px 30px rgba(16,6,30,0.6);
+  --touch-size: 44px;
+}
+
+body {
   background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
   color: #efe9ff;
   -webkit-font-smoothing: antialiased;
@@ -19,17 +32,15 @@ html, body {
   font-size: 18px; 
 }
 
-/* Center the Add form vertically and horizontally and stack header above the form */
 body {
   display: flex;
-  flex-direction: column; /* ensure header is on top, form below */
+  flex-direction: column; 
   align-items: center;
   justify-content: center;
-  gap: 1rem; /* space between header and form */
+  gap: 1rem; 
   padding: 1.5rem;
 }
 
-/* Outer container for the Add page form */
 .add-game-page {
   max-width: 980px;
   margin: 1.25rem auto;
@@ -41,7 +52,6 @@ body {
   overflow: hidden;
 }
 
-/* Header */
 .add-game-page .header {
   display: flex;
   gap: 1rem;
@@ -59,14 +69,12 @@ body {
   font-size: 0.92rem;
 }
 
-/* Form layout: grid for larger screens, stacked on small */
 .add-game-form {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.9rem;
 }
 
-/* Two-column layout on wider viewports */
 @media (min-width: 820px) {
   .add-game-form {
     grid-template-columns: 1fr 360px;
@@ -74,7 +82,6 @@ body {
   }
 }
 
-/* Card style for the right column (preview / meta) */
 .add-game-form .side-card {
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
   padding: 1rem;
@@ -82,14 +89,12 @@ body {
   border: 1px solid rgba(255,255,255,0.03);
 }
 
-/* Form groups */
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
 }
 
-/* Labels */
 .form-group label {
   font-size: 0.88rem;
   color: var(--muted);
@@ -98,7 +103,6 @@ body {
   letter-spacing: 0.3px;
 }
 
-/* Inputs, selects, textareas */
 input[type="text"],
 input[type="url"],
 input[type="number"],
@@ -116,13 +120,11 @@ input[type="date"] {
   transition: box-shadow .18s ease, transform .12s ease, border-color .12s ease;
 }
 
-/* Larger textarea */
 textarea {
   min-height: 140px;
   resize: vertical;
 }
 
-/* Input focus for touch & keyboard */
 input:focus,
 select:focus,
 textarea:focus {
@@ -131,7 +133,6 @@ textarea:focus {
   transform: translateY(-1px);
 }
 
-/* File input wrapper */
 .file-input {
   display: flex;
   gap: 0.6rem;
@@ -152,7 +153,7 @@ textarea:focus {
   font-size: 0.95rem;
 }
 
-/* Buttons */
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -179,13 +180,13 @@ textarea:focus {
   border: 1px solid rgba(255,255,255,0.04);
 }
 
-/* Secondary control hints */
+
 .hint {
   color: var(--muted);
   font-size: 0.85rem;
 }
 
-/* Small metadata row */
+
 .row {
   display:flex;
   gap: .6rem;
@@ -193,7 +194,6 @@ textarea:focus {
   align-items:center;
 }
 
-/* Preview tile */
 .preview {
   border-radius: 12px;
   overflow: hidden;
@@ -212,7 +212,6 @@ textarea:focus {
   flex-shrink:0;
 }
 
-/* Small labels/badges */
 .badge {
   background: rgba(255,255,255,0.03);
   color: var(--muted);
@@ -222,13 +221,11 @@ textarea:focus {
   border: 1px solid rgba(255,255,255,0.02);
 }
 
-/* Accessibility: visible focus for keyboard users */
 :focus {
   outline: 3px solid rgba(163,113,255,0.12);
   outline-offset: 3px;
 }
 
-/* Tiny polished touch: subtle separators */
 .hr {
   height: 1px;
   background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.03));
@@ -236,7 +233,6 @@ textarea:focus {
   border-radius: 1px;
 }
 
-/* Make form narrower on very small screens and increase touch sizes */
 @media (max-width: 520px) {
   html { font-size: 17px; }
   form[enctype="multipart/form-data"] {

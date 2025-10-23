@@ -1,39 +1,94 @@
 ﻿@page
 @model AddModel
 @{
-    ViewData["Title"] = "Add your game!";
+    ViewData["Title"] = "Add Game";
 }
-<h1>@ViewData["Title"]</h1>
 
 <link rel="stylesheet" href="~/css/Add_Game.css" />
 
-<form method="post" enctype="multipart/form-data">
-    @Html.AntiForgeryToken()
+<div class="add-game-page">
+  <div class="header">
     <div>
-        <label asp-for="Game.Name"></label>
-        <input asp-for="Game.Name" />
-        <span asp-validation-for="Game.Name"></span>
+      <div class="title">Add a new game</div>
+      <div class="subtitle">Enter the details below and upload an image.</div>
     </div>
+  </div>
+
+  <!-- Note: we use two submit buttons that target different handlers:
+       - Save Game -> OnPost
+       - Show Preview -> OnPostPreview -->
+  <form class="add-game-form" method="post" enctype="multipart/form-data">
     <div>
-        <label asp-for="Game.Description"></label>
-        <textarea asp-for="Game.Description"></textarea>
-        <span asp-validation-for="Game.Description"></span>
+      <div class="form-group">
+        <label asp-for="Game.Name">Name</label>
+        <input asp-for="Game.Name" id="nameInput" />
+        <span asp-validation-for="Game.Name" class="hint"></span>
+      </div>
+
+      <div class="form-group">
+        <label asp-for="Game.Description">Description</label>
+        <!-- Starts smaller; server-side preview requires submitting -->
+        <textarea asp-for="Game.Description" rows="2" class="auto-resize" id="descriptionInput"></textarea>
+        <span asp-validation-for="Game.Description" class="hint"></span>
+      </div>
+
+      <div class="form-group">
+        <label asp-for="Game.Categorie">Category</label>
+        <input asp-for="Game.Categorie" id="categoryInput" />
+        <span asp-validation-for="Game.Categorie" class="hint"></span>
+      </div>
+
+      <div class="form-group">
+        <label>Picture</label>
+        <div class="file-input">
+          <label class="btn btn-ghost" style="cursor:pointer;">
+            Choose file
+            <input asp-for="Picture" type="file" accept="image/*" />
+          </label>
+          <div class="hint" id="fileName">@Model.SelectedFileName ?? "No file selected"</div>
+        </div>
+        <span asp-validation-for="Picture" class="hint"></span>
+      </div>
+
+      <div style="margin-top:1rem; display:flex; gap:.6rem;">
+        <!-- final save posts to default OnPost handler -->
+        <button type="submit" class="btn btn-primary">Save Game</button>
+
+        <a asp-page="/Index" class="btn btn-ghost" role="button">Cancel</a>
+
+        <!-- preview posts to OnPostPreview handler -->
+        <button asp-page-handler="Preview" type="submit" class="btn btn-primary">Show Preview</button>
+      </div>
     </div>
-    <div>
-        <label asp-for="Picture">Picture</label>
-        <input asp-for="Picture" type="file" />
-        <span asp-validation-for="Picture"></span>
+
+    <div class="side-card">
+      @if (Model.ShowPreview)
+      {
+          <div class="preview">
+            <img id="previewImg" src="@(Model.PreviewImagePath ?? Url.Content("~/images/placeholder.png"))" alt="preview" />
+            <div>
+              <div class="badge">Preview</div>
+              <div class="hr"></div>
+              <div class="row">
+                <div class="title" style="font-size:1rem">@Model.Game?.Name</div>
+                <div class="hint">@Model.Game?.Categorie</div>
+              </div>
+              <div style="margin-top:.5rem;">
+                <div class="hint">@Model.Game?.Description</div>
+              </div>
+            </div>
+          </div>
+      }
+      else
+      {
+          <div style="margin-top:.75rem;">
+            <div class="hint">Press "Show Preview" to upload the image temporarily and see the preview.</div>
+          </div>
+      }
     </div>
-    <div>
-        <label asp-for="Game.Description">Category</label>
-        <input asp-for="Game.Description" />
-        <span asp-validation-for="Game.Description"></span>
-    </div>
-    <div>
-        <button type="submit">Submit</button>
-    </div>
-</form>
+  </form>
+</div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+  <partial name="_ValidationScriptsPartial" />
 }
