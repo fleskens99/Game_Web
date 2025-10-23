@@ -1,0 +1,39 @@
+﻿@page
+@model AddModel
+@{
+    ViewData["Title"] = "Add your game!";
+}
+<h1>@ViewData["Title"]</h1>
+
+<link rel="stylesheet" href="~/css/Add_Game.css" />
+
+<form method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div>
+        <label asp-for="Game.Name"></label>
+        <input asp-for="Game.Name" />
+        <span asp-validation-for="Game.Name"></span>
+    </div>
+    <div>
+        <label asp-for="Game.Description"></label>
+        <textarea asp-for="Game.Description"></textarea>
+        <span asp-validation-for="Game.Description"></span>
+    </div>
+    <div>
+        <label asp-for="Picture">Picture</label>
+        <input asp-for="Picture" type="file" />
+        <span asp-validation-for="Picture"></span>
+    </div>
+    <div>
+        <label asp-for="Game.Description">Category</label>
+        <input asp-for="Game.Description" />
+        <span asp-validation-for="Game.Description"></span>
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
