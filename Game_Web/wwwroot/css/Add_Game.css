@@ -22,15 +22,17 @@ body {
 }
 
 html, body {
-  height: 100%;
-  margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
-  color: var(--text);
-  font-size: 18px; 
+    height: 100%;
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+    color: var(--text);
+    font-size: 18px;
+    scroll-behavior: smooth;
 }
+
 
 body {
   display: flex;
@@ -42,17 +44,19 @@ body {
 }
 
 .add-game-page {
-  max-width: 980px;
-  margin: 1.25rem auto;
-  padding: 1.25rem;
-  border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(6px) saturate(1.05);
-  overflow: hidden;
+    max-width: 980px;
+    margin: 1.25rem auto;
+    padding: 1.25rem;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(6px) saturate(1.05);
+    overflow: hidden;
+    min-height: calc(100vh - 120px);
+    min-height: calc(100vh - 120px);
 }
 
-.add-game-page .header {
+.add-game-page .page-header {
   display: flex;
   gap: 1rem;
   align-items: center;
@@ -225,7 +229,6 @@ textarea:focus {
   outline: 3px solid rgba(163,113,255,0.12);
   outline-offset: 3px;
 }
-
 .hr {
   height: 1px;
   background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.03));

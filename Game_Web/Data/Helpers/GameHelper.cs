@@ -5,43 +5,52 @@ using Game_Web.Data.Entities;
 
 namespace Game_Web.Data.Models;
 
-public class GameModel
+public class GameHelper
 {
     private readonly string connectionString = "Server=localhost;Database=web_aplication;User=root;Password=francisco;";
 
-    public List<Game_Web.Data.Entities.GameModel> GetGames(string query)
+    public List<Game_Web.Data.Entities.Game> GetGames()
     {
-        var games = new List<Game_Web.Data.Entities.GameModel>();
+        var games = new List<Game_Web.Data.Entities.Game>();
 
-        using var conn = new MySqlConnection(connectionString);
-        try
+        using (var conn = new MySqlConnection(connectionString))
         {
-            conn.Open();
-        }
-        catch (MySqlException ex)
-        {
-            throw new Exception("Database was not connected.", ex);
-        }
-
-        using var cmd = new MySqlCommand(query, conn);
-        using var reader = cmd.ExecuteReader();
-        while (reader.Read())
-        {
-            var game = new Game_Web.Data.Entities.GameModel
+            try
             {
-                Id = reader.GetInt32("ID"),
-                Name = reader.GetString("Name"),
-                Categorie = reader.IsDBNull(reader.GetOrdinal("Categorie")) ? string.Empty : reader.GetString("Categorie"),
-                Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? string.Empty : reader.GetString("Description"),
-                Picture = reader.IsDBNull(reader.GetOrdinal("Picture")) ? string.Empty : reader.GetString("Picture"),
-            };
-            games.Add(game);
+                conn.Open();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Database was not connected.", ex);
+            }
+
+            using (var cmd = new MySqlCommand("SELECT * From game", conn))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var game = new Game_Web.Data.Entities.Game
+                        {
+                            Id = reader.GetInt32("ID"),
+                            Name = reader.GetString("Name"),
+                            Categorie = reader.IsDBNull(reader.GetOrdinal("Categorie")) ? string.Empty : reader.GetString("Categorie"),
+                            Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? string.Empty : reader.GetString("Description"),
+                            Picture = reader.IsDBNull(reader.GetOrdinal("Picture")) ? string.Empty : reader.GetString("Picture"),
+                        };
+                        games.Add(game);
+                    }
+                }
+
+            }
+            conn.Close();
+            return games;
+
         }
-        conn.Close();
-        return games;  
+        
     }
 
-    public void AddGame(Game_Web.Data.Entities.GameModel game)
+    public void AddGame(Game_Web.Data.Entities.Game game)
     {
         if (game == null) throw new ArgumentNullException(nameof(game));
 

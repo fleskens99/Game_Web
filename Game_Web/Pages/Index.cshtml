@@ -1,7 +1,59 @@
 ﻿@page
 @model IndexModel
-@{ 
+@{
     ViewData["Title"] = "Home page";
 }
 
-<h1>@ViewData["Title"]</h1>
+<link rel="stylesheet" href="~/css/index.css" />
+
+<div class="add-game-page page-wrapper">
+    <div class="page-header">
+        <div>
+            <div class="page-title">@ViewData["Title"]</div>
+            <div class="page-subtitle">Browse the games collection</div>
+        </div>
+    </div>
+
+    @if (Model.Games != null && Model.Games.Count > 0)
+    {
+        <div class="hr"></div>
+        <div class="games-grid">
+            @foreach (var game in Model.Games)
+            {
+                <article class="game-card">
+                    <div class="preview" aria-hidden="true">
+                        @if (!string.IsNullOrEmpty(game.Picture))
+                        {
+                            <img src="@game.Picture" alt="@game.Name" />
+                        }
+                        else
+                        {
+                            <div class="preview-placeholder">
+                                <span class="badge">No image</span>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="card-body">
+                        <div class="card-title">@game.Name</div>
+                        <div class="card-meta">
+                            <span class="badge">@game.Categorie</span>
+                        </div>
+
+                        <p class="card-desc">@game.Description</p>
+
+                        <div class="row" style="margin-top:.6rem;">
+                            <a class="btn btn-ghost" href="#">Details</a>
+                            <button class="btn btn-primary" disabled>Play</button>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="hint">No games found.</p>
+    }
+
+</div>

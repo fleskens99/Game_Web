@@ -7,16 +7,13 @@
 <link rel="stylesheet" href="~/css/Add_Game.css" />
 
 <div class="add-game-page">
-  <div class="header">
+  <div class="page-header">
     <div>
       <div class="title">Add a new game</div>
       <div class="subtitle">Enter the details below and upload an image.</div>
     </div>
   </div>
 
-  <!-- Note: we use two submit buttons that target different handlers:
-       - Save Game -> OnPost
-       - Show Preview -> OnPostPreview -->
   <form class="add-game-form" method="post" enctype="multipart/form-data">
     <div>
       <div class="form-group">
@@ -27,7 +24,6 @@
 
       <div class="form-group">
         <label asp-for="Game.Description">Description</label>
-        <!-- Starts smaller; server-side preview requires submitting -->
         <textarea asp-for="Game.Description" rows="2" class="auto-resize" id="descriptionInput"></textarea>
         <span asp-validation-for="Game.Description" class="hint"></span>
       </div>
@@ -41,22 +37,21 @@
       <div class="form-group">
         <label>Picture</label>
         <div class="file-input">
-          <label class="btn btn-ghost" style="cursor:pointer;">
+        <label class="btn btn-ghost" for="fileInput" accept="image/*" style="cursor:pointer;">S
             Choose file
-            <input asp-for="Picture" type="file" accept="image/*" />
-          </label>
-          <div class="hint" id="fileName">@Model.SelectedFileName ?? "No file selected"</div>
+        </label>
+                    <input asp-for="Picture" id="fileInput" type="file" accept="image/*" style="display:none;" />
+                    
+          <div class="hint" id="fileName">@Model.SelectedFileName</div>
         </div>
         <span asp-validation-for="Picture" class="hint"></span>
       </div>
 
       <div style="margin-top:1rem; display:flex; gap:.6rem;">
-        <!-- final save posts to default OnPost handler -->
         <button type="submit" class="btn btn-primary">Save Game</button>
 
         <a asp-page="/Index" class="btn btn-ghost" role="button">Cancel</a>
 
-        <!-- preview posts to OnPostPreview handler -->
         <button asp-page-handler="Preview" type="submit" class="btn btn-primary">Show Preview</button>
       </div>
     </div>
