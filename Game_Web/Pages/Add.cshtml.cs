@@ -24,6 +24,7 @@ public class AddModel : PageModel
     {
     }
 
+
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
@@ -47,7 +48,7 @@ public class AddModel : PageModel
         }
         try
         {
-            var repo = new Game_Web.Data.Models.GameRepo();
+            var repo = new Game_Web.Data.Models.GameModel(); // your ADO helper
             repo.AddGame(Game);
         }
         catch (Exception ex)
@@ -57,6 +58,8 @@ public class AddModel : PageModel
         }
         return RedirectToPage("/Index");
     }
+
+    // Preview handler: saves the uploaded file to a temp preview location and returns the page with preview info
     public async Task<IActionResult> OnPostPreviewAsync()
     {
         if (string.IsNullOrWhiteSpace(Game?.Name) ||
