@@ -5,7 +5,7 @@ using Game_Web.Data.Entities;
 
 namespace Game_Web.Data.Models;
 
-public class GameHelper
+public class GameRepo
 {
     private readonly string connectionString = "Server=localhost;Database=web_aplication;User=root;Password=francisco;";
 
@@ -59,13 +59,14 @@ public class GameHelper
 
  
         var sql = "INSERT INTO game (Name, Categorie, Description, Picture) VALUES (@Name, @Categorie, @Description, @Picture)";
-        using var cmd = new MySqlCommand(sql, conn);
-        cmd.Parameters.AddWithValue("@Name", game.Name ?? string.Empty);
-        cmd.Parameters.AddWithValue("@Categorie", game.Categorie ?? string.Empty);
-        cmd.Parameters.AddWithValue("@Description", game.Description ?? string.Empty);
-        cmd.Parameters.AddWithValue("@Picture", game.Picture ?? string.Empty);
+        using (var cmd = new MySqlCommand(sql, conn))
+        {
+            cmd.Parameters.AddWithValue("@Name", game.Name ?? string.Empty);
+            cmd.Parameters.AddWithValue("@Categorie", game.Categorie ?? string.Empty);
+            cmd.Parameters.AddWithValue("@Description", game.Description ?? string.Empty);
+            cmd.Parameters.AddWithValue("@Picture", game.Picture ?? string.Empty);
 
-        cmd.ExecuteNonQuery();
-        conn.Close();
+            cmd.ExecuteNonQuery();
+        }
     }
 }

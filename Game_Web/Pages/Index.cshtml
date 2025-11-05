@@ -4,9 +4,9 @@
     ViewData["Title"] = "Home page";
 }
 
-<link rel="stylesheet" href="~/css/index.css" />
+<link rel="stylesheet" href="~/css/Index.css" />
 
-<div class="add-game-page page-wrapper">
+<div class="game-page page-wrapper">
     <div class="page-header">
         <div>
             <div class="page-title">@ViewData["Title"]</div>
@@ -16,7 +16,6 @@
 
     @if (Model.Games != null && Model.Games.Count > 0)
     {
-        <div class="hr"></div>
         <div class="games-grid">
             @foreach (var game in Model.Games)
             {
@@ -43,8 +42,9 @@
                         <p class="card-desc">@game.Description</p>
 
                         <div class="row" style="margin-top:.6rem;">
-                            <a class="btn btn-ghost" href="#">Details</a>
-                            <button class="btn btn-primary" disabled>Play</button>
+                            <form method="post">
+                                <button type="submit" href="/Details" asp-page="/Details" asp-route-id="@game.Id">Details</button>
+                            </form>
                         </div>
                     </div>
                 </article>

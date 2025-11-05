@@ -47,7 +47,7 @@ public class AddModel : PageModel
         }
         try
         {
-            var repo = new Game_Web.Data.Models.GameHelper();
+            var repo = new Game_Web.Data.Models.GameRepo();
             repo.AddGame(Game);
         }
         catch (Exception ex)

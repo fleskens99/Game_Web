@@ -1,11 +1,12 @@
 using Game_Web.Data.Entities;
+using Game_Web.Data.Models;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.IO;
 using System;
+using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Game_Web.Data.Models;
 
 namespace Game_Web.Pages;
 
@@ -20,7 +21,11 @@ public class IndexModel : PageModel
 
     public void OnGet() 
     {
-        var gameHelper = new GameHelper();
+        var gameHelper = new GameRepo();
         Games = gameHelper.GetGames();
+    }
+    public IActionResult OnPost()
+    {
+        return RedirectToPage("/Details");
     }
 }

@@ -4,9 +4,9 @@
     ViewData["Title"] = "Add Game";
 }
 
-<link rel="stylesheet" href="~/css/Add_Game.css" />
+<link rel="stylesheet" href="~/css/Add_Game.css">
 
-<div class="add-game-page">
+<div class="game-page">
   <div class="page-header">
     <div>
       <div class="title">Add a new game</div>
@@ -63,7 +63,6 @@
             <img id="previewImg" src="@(Model.PreviewImagePath ?? Url.Content("~/images/placeholder.png"))" alt="preview" />
             <div>
               <div class="badge">Preview</div>
-              <div class="hr"></div>
               <div class="row">
                 <div class="title" style="font-size:1rem">@Model.Game?.Name</div>
                 <div class="hint">@Model.Game?.Categorie</div>
