@@ -21,7 +21,7 @@ public class IndexModel : PageModel
 
     public void OnGet() 
     {
-        var gameHelper = new GameRepo();
+        GameRepo gameHelper = new GameRepo();
         Games = gameHelper.GetGames();
     }
     public IActionResult OnPost()
