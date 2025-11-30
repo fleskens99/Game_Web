@@ -1,8 +1,6 @@
-﻿using System.Reflection.Metadata;
-
-namespace Entities
+﻿namespace DTOs
 {
-    public class Game
+    public class GameDTO
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
