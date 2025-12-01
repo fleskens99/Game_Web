@@ -1,12 +1,11 @@
-﻿using Repos;
-using DTOs;
+﻿using Entities;
 
 namespace Interfaces
 {
     public interface IGameRepo
     {
-        List<GameDTO> GetGames();
-        void AddGame(GameDTO game);
+        List<Game> GetGames();
+        void AddGame(Game game);
 
     }
 }

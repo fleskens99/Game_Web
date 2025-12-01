@@ -1,20 +1,22 @@
-﻿using Game_Web.Data.Entities;
+﻿using Entities;
+using Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.IO;
+using Repos;
 using System;
+using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace Game_Web.Pages;
 
 public class AddModel : PageModel
 {
-    [BindProperty]
-    //create a Game
-    public Game_Web.Data.Entities.Game Game { get; set; } = new();
+    private readonly IGameRepo _gameRepo;
 
     [BindProperty]
+    //create a Game
+    public Game Game { get; set; } = new();
     public IFormFile? Picture { get; set; }
     public string? PreviewImagePath { get; set; }
     public string? SelectedFileName { get; set; }
@@ -24,6 +26,10 @@ public class AddModel : PageModel
     {
     }
 
+    public AddModel(IGameRepo gameRepo)
+    {
+        _gameRepo = gameRepo;
+    }
 
     public async Task<IActionResult> OnPostAsync()
     {
@@ -34,13 +40,13 @@ public class AddModel : PageModel
 
         if (Picture != null && Picture.Length > 0)
         {
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
             Directory.CreateDirectory(uploadsFolder);
 
-            var fileName = Guid.NewGuid().ToString("N") + Path.GetExtension(Picture.FileName);
-            var filePath = Path.Combine(uploadsFolder, fileName);
+            string fileName = Guid.NewGuid().ToString("N") + Path.GetExtension(Picture.FileName);
+            string filePath = Path.Combine(uploadsFolder, fileName);
 
-            await using (var stream = new FileStream(filePath, FileMode.Create))
+            await using (FileStream stream = new FileStream(filePath, FileMode.Create))
             {
                 await Picture.CopyToAsync(stream);
             }
@@ -48,8 +54,7 @@ public class AddModel : PageModel
         }
         try
         {
-            var repo = new Game_Web.Data.Models.GameRepo();
-            repo.AddGame(Game);
+            _gameRepo.AddGame(Game);
         }
         catch (Exception ex)
         {
@@ -74,13 +79,13 @@ public class AddModel : PageModel
 
         if (Picture != null && Picture.Length > 0)
         {
-            var previewFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "preview");
+            string previewFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "preview");
             Directory.CreateDirectory(previewFolder);
 
-            var fileName = Guid.NewGuid().ToString("N") + Path.GetExtension(Picture.FileName);
-            var filePath = Path.Combine(previewFolder, fileName);
+            string fileName = Guid.NewGuid().ToString("N") + Path.GetExtension(Picture.FileName);
+            string filePath = Path.Combine(previewFolder, fileName);
 
-            await using (var stream = new FileStream(filePath, FileMode.Create))
+            await using (FileStream stream = new FileStream(filePath, FileMode.Create))
             {
                 await Picture.CopyToAsync(stream);
             }

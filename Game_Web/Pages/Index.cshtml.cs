@@ -1,5 +1,6 @@
-using Game_Web.Data.Entities;
-using Game_Web.Data.Models;
+using Entities;
+using Repos;
+using Interfaces;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,17 +13,21 @@ namespace Game_Web.Pages;
 
 public class IndexModel : PageModel
 {
+    private readonly IGameRepo _gameRepo;
     [BindProperty]
-    public Game_Web.Data.Entities.Game Game { get; set; } = new();
-
-    [BindProperty]
+    public Game Game { get; set; } = new();
     public IFormFile? Picture { get; set; }
-    public List<Game_Web.Data.Entities.Game> Games { get; set; } = new();
+    public List<Game> Games { get; set; } = new();
+
+    public IndexModel(IGameRepo gameRepo)
+    {
+        _gameRepo = gameRepo;
+    }
+
 
     public void OnGet() 
     {
-        GameRepo gameHelper = new GameRepo();
-        Games = gameHelper.GetGames();
+        Games = _gameRepo.GetGames();
     }
     public IActionResult OnPost()
     {

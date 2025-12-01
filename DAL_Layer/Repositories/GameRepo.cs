@@ -1,16 +1,16 @@
 ﻿using DAL;
-using DTOs;
+using Entities;
 using MySql.Data.MySqlClient;
-using Logic.Interfaces;
+using Interfaces;
 
 
 namespace Repos
 {
     public class GameRepo : IGameRepo
     {
-        public List<GameDTO> GetGames()
+        public List<Game> GetGames()
         {
-            var games = new List<GameDTO>();
+            List<Game> games = new List<Game>();
 
             using (MySqlConnection conn = new MySqlConnection(DatabaseConnectionString.ConnectionString))
             {
@@ -29,7 +29,7 @@ namespace Repos
                     {
                         while (reader.Read())
                         {
-                            var game = new GameDTO
+                            var game = new Game
                             {
                                 Id = reader.GetInt32("ID"),
                                 Name = reader.GetString("Name"),
@@ -49,7 +49,7 @@ namespace Repos
 
         }
 
-        public void AddGame(GameDTO game)
+        public void AddGame(Game game)
         {
             if (game == null) throw new ArgumentNullException(nameof(game));
 
