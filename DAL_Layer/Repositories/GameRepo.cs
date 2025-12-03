@@ -68,6 +68,41 @@ namespace Repos
                 cmd.ExecuteNonQuery();
             }
         }
+
+        public Game GetGameById(int id)
+        {
+
+            {
+                Game game = null;
+
+                using MySqlConnection conn = new MySqlConnection(DatabaseConnectionString.ConnectionString);
+                
+                conn.Open();
+
+                string query = "SELECT Id, Name, Categorie, Description, Picture FROM Games WHERE Id = @Id";
+                
+                using MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Id", id);
+
+                using MySqlDataReader reader = cmd.ExecuteReader();
+                
+                if (reader.Read())
+                {
+                    game = new Game
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                        Name = reader.GetString(reader.GetOrdinal("Name")),
+                        Categorie = reader.GetString(reader.GetOrdinal("Categorie")),
+                        Description = reader.GetString(reader.GetOrdinal("Description")),
+                        Picture = reader.GetString(reader.GetOrdinal("Picture"))
+                    };
+                }
+                
+                conn.Close();
+                return game;
+            }
+
+        }
     }
 }
 

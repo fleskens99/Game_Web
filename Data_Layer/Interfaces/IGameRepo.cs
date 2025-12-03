@@ -7,5 +7,7 @@ namespace Interfaces
         List<Game> GetGames();
         void AddGame(Game game);
 
+        Game GetGameById(int id);
+
     }
 }

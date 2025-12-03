@@ -6,11 +6,20 @@
 
 <link rel="stylesheet" href="~/css/Details.css" />
 
-<div class="details-page">
-  <div class="page-header">
-    <div>
-      <div class="title">Game Details</div>
-      <div class="subtitle">View the details of the selected game</div>
-    </div>
-  </div>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Model.Title - Details</title>
+</head>
+<body>
+    <h1>@Model.Title</h1>
+    <img src="@Model.ImageUrl" alt="@Model.Game.Title" style="width:300px;" />
+    <p><strong>Category:</strong> @Model.Game.Categorie</p>
+    <p><strong>Rating:</strong> @Model.Game.Rating</p>
+    <p><strong>Description:</strong> @Model.Game.Description</p>
+
+    <a asp-controller="Games" asp-action="Index">Back to List</a>
+</body>
+</html>
+
+
