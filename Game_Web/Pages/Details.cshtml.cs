@@ -8,7 +8,7 @@ namespace Game_Web.Pages
 {
     public class DetailsModel : PageModel
     {
-        public List<Game> Game { get; set; } = new List<Game>();
+        public List<GameVM> Game { get; set; } = new List<Game>();
         private readonly IGameRepo _gameRepo;
 
         public DetailsModel(IGameRepo gameRepo)

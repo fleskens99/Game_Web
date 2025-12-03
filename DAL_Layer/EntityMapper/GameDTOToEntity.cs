@@ -5,7 +5,7 @@ namespace Logic.Mapper
 {
     public class GameDTOToEntity
     {
-        public static Entities.Game MapToEntity(DTOs.GameDTO gameDto)
+        public static Entities.Game MapToEntity(GameDTO gameDto)
         {
             if (gameDto == null) throw new ArgumentNullException(nameof(gameDto));
             return new Entities.Game

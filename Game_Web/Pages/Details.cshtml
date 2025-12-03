@@ -9,11 +9,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>@Model.Title - Details</title>
+    <title>@Model.Game.Title - Details</title>
 </head>
 <body>
-    <h1>@Model.Title</h1>
-    <img src="@Model.ImageUrl" alt="@Model.Game.Title" style="width:300px;" />
+    <h1>@Model.Game.Title</h1>
+    <img src="@Model.Game.ImageUrl" alt="@Model.Game.Title" style="width:300px;" />
     <p><strong>Category:</strong> @Model.Game.Categorie</p>
     <p><strong>Rating:</strong> @Model.Game.Rating</p>
     <p><strong>Description:</strong> @Model.Game.Description</p>
