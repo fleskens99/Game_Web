@@ -1,14 +1,14 @@
-using Entities;
-using Interfaces;
+using ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Interfaces;
 
 
 namespace Game_Web.Pages
 {
     public class DetailsModel : PageModel
     {
-        public List<GameVM> Game { get; set; } = new List<Game>();
+        public GameVM Game { get; set; } = new GameVM();
         private readonly IGameRepo _gameRepo;
 
         public DetailsModel(IGameRepo gameRepo)

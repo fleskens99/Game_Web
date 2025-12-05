@@ -2,12 +2,10 @@
 
 namespace Interfaces
 {
-    public interface IGameRepo
+    public interface IAddGameService
     {
-        List<GameDTO> GetGames();
         Task<int> AddGame(GameDTO game, CancellationToken cancellationToken = default);
-        GameDTO GetGameById(int id);
-
 
     }
+
 }

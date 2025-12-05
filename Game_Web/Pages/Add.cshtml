@@ -1,5 +1,5 @@
 ﻿@page
-@model AddModel
+@model MyApp.Web.Pages.Games.AddModel
 @{
     ViewData["Title"] = "Add Game";
 }
@@ -7,87 +7,58 @@
 <link rel="stylesheet" href="~/css/Add_Game.css">
 
 <div class="add-game-page">
-  <div class="add-page-header">
-    <div>
-      <div class="page-title">Add a new game</div>
-      <div class="page-subtitle">Enter the details below and upload an image.</div>
-    </div>
-  </div>
-
-  <form class="add-game-form" method="post" enctype="multipart/form-data">
-    <div>
-      <div asp-validation-summary="ModelOnly" class="hint"></div>
-
-      <div class="form-group">
-        <label asp-for="Game.Name">Name</label>
-        <input asp-for="Game.Name" id="nameInput" />
-        <span asp-validation-for="Game.Name" class="hint"></span>
-      </div>
-
-      <div class="form-group">
-        <label asp-for="Game.Description">Description</label>
-        <textarea asp-for="Game.Description" rows="2" class="auto-resize" id="descriptionInput"></textarea>
-        <span asp-validation-for="Game.Description" class="hint"></span>
-      </div>
-
-      <div class="form-group">
-        <label asp-for="Game.Categorie">Category</label>
-        <input asp-for="Game.Categorie" id="categoryInput" />
-        <span asp-validation-for="Game.Categorie" class="hint"></span>
-      </div>
-
-      <div class="form-group">
-        <label for="Picture">Picture</label>
-        <div class="file-input">
-        <label class="btn btn-ghost" for="fileInput" accept="image/*" style="cursor:pointer;">S
-            Choose file
-        </label>
-                    <input asp-for="Picture" id="fileInput" type="file" accept="image/*" style="display:none;" />
-                    
-          <div class="hint" id="fileName">@Model.SelectedFileName</div>
+    <div class="add-page-header">
+        <div>
+            <div class="page-title">Add a new game</div>
+            <div class="page-subtitle">Enter the details below and upload an image.</div>
         </div>
-        <span asp-validation-for="Picture" class="hint"></span>
-      </div>
-
-      <div style="margin-top:1rem; display:flex; gap:.6rem;">
-        <button type="submit" class="btn btn-primary">Save Game</button>
-        <a asp-page="/Index" class="btn btn-ghost" role="button">Cancel</a>
-
-        <button asp-page-handler="Preview" type="submit" class="btn btn-primary">Show Preview</button>
-      </div>
     </div>
 
-    <div class="side-card">
-      <div style="display:flex; align-items:center; justify-content:flex-end; gap:.6rem; margin-bottom:.5rem;">
-        <button asp-page-handler="Preview" type="submit" id="showPreviewBtn" class="btn btn-primary">Show Preview</button>
-      </div>
+    <form class="add-game-form" method="post" enctype="multipart/form-data">
+        <div>
+            <div asp-validation-summary="ModelOnly" class="hint"></div>
 
-      @if (Model.ShowPreview)
-      {
-          <div class="preview">
-            <img id="previewImg" src="@(Model.PreviewImagePath ?? Url.Content("~/images/placeholder.png"))" alt="preview" />
-            <div>
-              <div class="badge">Preview</div>
-              <div class="row">
-                <div class="title" style="font-size:1rem">@Model.Game?.Name</div>
-                <div class="hint">@Model.Game?.Categorie</div>
-              </div>
-              <div style="margin-top:.5rem;">
-                <div class="hint">@Model.Game?.Description</div>
-              </div>
+            <div class="form-group">
+                <label asp-for="Input.Title">Name</label>
+                <input asp-for="Input.Title" id="nameInput" class="form-control" />
+                <span asp-validation-for="Input.Title" class="hint"></span>
             </div>
-          </div>
-      }
-      else
-      {
-          <div style="margin-top:.75rem;">
-            <div class="hint">Press "Show Preview" to render a server-side preview.</div>
-          </div>
-      }
-    </div>
-  </form>
+
+            <div class="form-group">
+                <label asp-for="Input.Description">Description</label>
+                <textarea asp-for="Input.Description" rows="2" class="auto-resize form-control" id="descriptionInput"></textarea>
+                <span asp-validation-for="Input.Description" class="hint"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Category">Category</label>
+                <input asp-for="Input.Category" id="categoryInput" class="form-control" />
+                <span asp-validation-for="Input.Category" class="hint"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Picture">Picture</label>
+                <div class="file-input">
+                    <input asp-for="Input.Picture" id="fileInput" type="file" accept="image/*" class="form-control-file" />
+                    <div class="hint" id="fileName"></div>
+                </div>
+                <span asp-validation-for="Input.Picture" class="hint"></span>
+            </div>
+
+            <div style="margin-top:1rem; display:flex; gap:.6rem;">
+                <button type="submit" class="btn btn-primary">Save Game</button>
+                <a asp-page="/Index" class="btn btn-ghost" role="button">Cancel</a>
+            </div>
+        </div>
+
+        <div class="side-card">
+            <div style="margin-top:.75rem;">
+                <div class="hint">Server-side preview is disabled. After saving you can view the game details.</div>
+            </div>
+        </div>
+    </form>
 </div>
-    
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

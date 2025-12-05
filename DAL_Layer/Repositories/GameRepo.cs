@@ -1,108 +1,104 @@
 ﻿using DAL;
-using Entities;
-using MySql.Data.MySqlClient;
+using DTOs;
 using Interfaces;
-
+using MySql.Data.MySqlClient;
+using System.Data;
 
 namespace Repos
 {
     public class GameRepo : IGameRepo
     {
-        public List<Game> GetGames()
+        public List<GameDTO> GetGames()
         {
-            List<Game> games = new List<Game>();
+            List<GameDTO> games = new List<GameDTO>();
 
-            using (MySqlConnection conn = new MySqlConnection(DatabaseConnectionString.ConnectionString))
+            using (var conn = new MySqlConnection(DatabaseConnectionString.ConnectionString))
             {
-                try
-                {
-                    conn.Open();
-                }
-                catch (MySqlException ex)
-                {
-                    throw new Exception("Database was not connected.", ex);
-                }
+                conn.Open();
 
-                using (MySqlCommand cmd = new MySqlCommand("SELECT * From game", conn))
+                using (var cmd = new MySqlCommand("SELECT Id, Name, Category, Description, Picture FROM game", conn))
+                using (var reader = cmd.ExecuteReader())
                 {
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    while (reader.Read())
                     {
-                        while (reader.Read())
+                        games.Add(new GameDTO
                         {
-                            var game = new Game
-                            {
-                                Id = reader.GetInt32("ID"),
-                                Name = reader.GetString("Name"),
-                                Categorie = reader.IsDBNull(reader.GetOrdinal("Categorie")) ? string.Empty : reader.GetString("Categorie"),
-                                Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? string.Empty : reader.GetString("Description"),
-                                Picture = reader.IsDBNull(reader.GetOrdinal("Picture")) ? string.Empty : reader.GetString("Picture"),
-                            };
-                            games.Add(game);
-                        }
+                            Id = reader.GetInt32("Id"),
+                            Name = reader.GetString("Name"),
+                            Category = reader.IsDBNull(reader.GetOrdinal("Category"))
+                                ? string.Empty
+                                : reader.GetString("Category"),
+                            Description = reader.IsDBNull(reader.GetOrdinal("Description"))
+                                ? string.Empty
+                                : reader.GetString("Description"),
+                            Picture = reader.IsDBNull(reader.GetOrdinal("Picture"))
+                                ? null
+                                : (byte[])reader["Picture"]  // <-- READ BLOB AS BYTE[]
+                        });
                     }
-
                 }
-                conn.Close();
-                return games;
-
             }
 
+            return games;
         }
 
-        public void AddGame(Game game)
+        public async Task<int> AddGame(GameDTO game, CancellationToken cancellationToken = default)
         {
-            if (game == null) throw new ArgumentNullException(nameof(game));
+            const string sql = @"
+                INSERT INTO game (Name, Description, Category, Picture)
+                VALUES (@Name, @Description, @Category, @Picture);
+            ";
+
+            await using var conn = new MySqlConnection(DatabaseConnectionString.ConnectionString);
+            await conn.OpenAsync(cancellationToken);
+
+            await using var cmd = new MySqlCommand(sql, conn);
+
+            cmd.Parameters.AddWithValue("@Name", game.Name);
+            cmd.Parameters.AddWithValue("@Description", (object?)game.Description ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Category", (object?)game.Category ?? DBNull.Value);
+
+            // Write BLOB correctly
+            cmd.Parameters.Add("@Picture", MySqlDbType.LongBlob).Value =
+                (object?)game.Picture ?? DBNull.Value;
+
+            await cmd.ExecuteNonQueryAsync(cancellationToken);
+            return (int)cmd.LastInsertedId;
+        }
+
+        public GameDTO GetGameById(int id)
+        {
+            GameDTO? game = null;
 
             using var conn = new MySqlConnection(DatabaseConnectionString.ConnectionString);
             conn.Open();
 
+            const string query = "SELECT Id, Name, Category, Description, Picture FROM game WHERE Id = @Id";
 
-            var sql = "INSERT INTO game (Name, Categorie, Description, Picture) VALUES (@Name, @Categorie, @Description, @Picture)";
-            using (var cmd = new MySqlCommand(sql, conn))
+            using var cmd = new MySqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            using var reader = cmd.ExecuteReader();
+
+            if (reader.Read())
             {
-                cmd.Parameters.AddWithValue("@Name", game.Name ?? string.Empty);
-                cmd.Parameters.AddWithValue("@Categorie", game.Categorie ?? string.Empty);
-                cmd.Parameters.AddWithValue("@Description", game.Description ?? string.Empty);
-                cmd.Parameters.AddWithValue("@Picture", game.Picture ?? string.Empty);
-
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        public Game GetGameById(int id)
-        {
-
-            {
-                Game game = null;
-
-                using MySqlConnection conn = new MySqlConnection(DatabaseConnectionString.ConnectionString);
-                
-                conn.Open();
-
-                string query = "SELECT Id, Name, Categorie, Description, Picture FROM Games WHERE Id = @Id";
-                
-                using MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Id", id);
-
-                using MySqlDataReader reader = cmd.ExecuteReader();
-                
-                if (reader.Read())
+                game = new GameDTO
                 {
-                    game = new Game
-                    {
-                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                        Name = reader.GetString(reader.GetOrdinal("Name")),
-                        Categorie = reader.GetString(reader.GetOrdinal("Categorie")),
-                        Description = reader.GetString(reader.GetOrdinal("Description")),
-                        Picture = reader.GetString(reader.GetOrdinal("Picture"))
-                    };
-                }
-                
-                conn.Close();
-                return game;
+                    Id = reader.GetInt32("Id"),
+                    Name = reader.GetString("Name"),
+                    Category = reader.IsDBNull(reader.GetOrdinal("Category"))
+                        ? string.Empty
+                        : reader.GetString("Category"),
+                    Description = reader.IsDBNull(reader.GetOrdinal("Description"))
+                        ? string.Empty
+                        : reader.GetString("Description"),
+                    Picture = reader.IsDBNull(reader.GetOrdinal("Picture"))
+                        ? null
+                        : (byte[])reader["Picture"]   // <-- READ BLOB AS BYTE[]
+                };
             }
 
+            return game!;
         }
     }
 }
-

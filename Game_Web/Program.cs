@@ -1,11 +1,13 @@
 using Interfaces;
 using Repos;
+using Services; 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IGameRepo, GameRepo>();
+builder.Services.AddScoped<IAddGameService, AddGameService>();
 
 
 var app = builder.Build();
