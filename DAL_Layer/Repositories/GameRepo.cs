@@ -33,7 +33,7 @@ namespace Repos
                             {
                                 Id = reader.GetInt32("ID"),
                                 Name = reader.GetString("Name"),
-                                Categorie = reader.IsDBNull(reader.GetOrdinal("Categorie")) ? string.Empty : reader.GetString("Categorie"),
+                                Categorie = reader.IsDBNull(reader.GetOrdinal("Category")) ? string.Empty : reader.GetString("Category"),
                                 Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? string.Empty : reader.GetString("Description"),
                                 Picture = reader.IsDBNull(reader.GetOrdinal("Picture")) ? string.Empty : reader.GetString("Picture"),
                             };
@@ -57,7 +57,7 @@ namespace Repos
             conn.Open();
 
 
-            var sql = "INSERT INTO game (Name, Categorie, Description, Picture) VALUES (@Name, @Categorie, @Description, @Picture)";
+            var sql = "INSERT INTO game (Name, Category, Description, Picture) VALUES (@Name, @Categorie, @Description, @Picture)";
             using (var cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@Name", game.Name ?? string.Empty);
